@@ -8,17 +8,21 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v2
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
 
-    - name: Build
-      run: |
-        msbuild vs10/masscan.sln /p:Configuration=Release
+      - name: Build
+        run: |
+          msbuild vs10/masscan.sln /p:Configuration=Release /p:PlatformToolset=v143
 
-    - name: Upload EXE
-      uses: actions/upload-artifact@v4
-      with:
-        name: masscan-windows
-        path: bin/masscan.exe
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: masscan-windows
+          path: |
+            bin/**/*.exe
+            Release/**/*.exe
+            **/masscan.exe
