@@ -11,18 +11,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            git
+            make
+            mingw-w64-x86_64-gcc
 
       - name: Build
+        shell: msys2 {0}
         run: |
-          msbuild vs10/masscan.sln /p:Configuration=Release /p:PlatformToolset=v143
+          make
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
         with:
           name: masscan-windows
-          path: |
-            bin/**/*.exe
-            Release/**/*.exe
-            **/masscan.exe
+          path: bin/masscan.exe
